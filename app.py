@@ -72,4 +72,25 @@ def register_student():
 def attendance():
     if 'role' not in session or session['role'] != 'teacher':
         return redirect(url_for('login'))
-    with sqlite3.connect()
+    with sqlite3.connect('database.db') as conn:
+        c = conn.cursor()
+        c.execute("SELECT * FROM students")
+        students = c.fetchall()
+
+        if request.method == 'POST':
+            date = request.form['date']
+            for student in students:
+                status = request.form.get(f'status_{student[0]}')
+                c.execute("INSERT INTO attendance (student_id, date, status) VALUES (?, ?, ?)",(student[0], date, status))
+            conn.commit()
+            return redirect(url_for('dashboard'))
+    return render_template('attendance.html',students=students)
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
+
+if __name__ == '__main__':
+    init_db()
+    app.run(debug=True)
