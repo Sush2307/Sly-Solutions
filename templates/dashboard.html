@@ -9,7 +9,14 @@
 <body>
     <div class="container">
         <div class="header">Welcome, {{ role.capitalize() }}</div>
-        
+        <div style="margin-top: 20px;">
+            {% if role == 'admin' %}
+                <a href="/register_student"><button>Register Student</button></a>
+            {% elif role == 'teacher' %}
+                <a href="/attendance"><button>Mark Attendance</button></a>
+            {% endif %}
+                <a href="/logout"><button>logout</button></a>
+        </div>
     </div>
 </body>
 </html>
