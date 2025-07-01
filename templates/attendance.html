@@ -11,11 +11,11 @@
         <h2>Mark Attendance</h2>
         <form method="post">
             <label for="date">Select Date:</label>
-            <input type="date" name="date" required>
+            <input type="date" name="date" id="date" required>
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Student Nmae</th>
+                        <th>Student Name</th>
                         <th>Status</th>
                     </tr>
                 </thead>
@@ -24,8 +24,8 @@
                     <tr>
                         <td>{{ student[1] }}</td>
                         <td>
-                            <select>
-                                <option value="Parent">Parent</option>
+                            <select name="status_{{ student[0] }}">
+                                <option value="Present">Present</option>
                                 <option value="Absent">Absent</option>
                             </select>
                         </td>

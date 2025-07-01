@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>dashboard</title>
+    <title>Dashboard</title>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
@@ -11,11 +11,17 @@
         <div class="header">Welcome, {{ role.capitalize() }}</div>
         <div style="margin-top: 20px;">
             {% if role == 'admin' %}
-                <a href="/register_student"><button>Register Student</button></a>
+            <form action="/register_student" method="get">
+                <button type="submit">Register Student</button>
+            </form>
             {% elif role == 'teacher' %}
-                <a href="/attendance"><button>Mark Attendance</button></a>
+            <form action="/attendance" method="get">
+                <button type="submit">Mark Attendance</button>
+            </form>
             {% endif %}
-                <a href="/logout"><button>logout</button></a>
+            <form action="/logout" method="get">
+                <button type="submit">Logout</button>
+            </form>
         </div>
     </div>
 </body>

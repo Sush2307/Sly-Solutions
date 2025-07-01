@@ -6,25 +6,28 @@ app.secret_key = 'your_secret_key'
 def init_db():
     with sqlite3.connect('database.db') as conn:
         c = conn.cursor()
+        c.execute("SELECT * FROM users WHERE username='admin'")
+        if not c.fetchone():
+            c.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?)",('admin', 'admin123', 'admin'))
         c.execute('''CREATE TABLE IF NOT EXISTS users (
                   id INTEGER PRIMARY KEY,
                   username TEXT,
                   password TEXT,
                   role TEXT)''')
-        c.execute('''CREATE TABLE IF NOT EXCITS students (
+        c.execute('''CREATE TABLE IF NOT EXISTS students (
                   id INTEGER PRIMARY KEY,
                   name TEXT,
                   class TEXT,
                   roll_no TEXT,
                   dob TEXT,
                   address TEXT,
-                  parent_context TEXT)''')
-        c.execute('''CREATE TABLE IF NOT EXCITS attendance (
+                  parent_contact TEXT)''')
+        c.execute('''CREATE TABLE IF NOT EXISTS attendance (
                   id INTEGER PRIMARY KEY,
                   student_id INTEGER,
                   date TEXT,
                   status TEXT,
-                  FOREIGN KEY(student_id) REFERENCE students(id))''')
+                  FOREIGN KEY(student_id) REFERENCES students(id))''')
         conn.commit()
 
 @app.route('/')
@@ -33,7 +36,7 @@ def home():
 @app.route('/login', methods=['GET','POST'])
 def login():
     error = ''
-    if request.method == 'post':
+    if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
         with sqlite3.connect('database.db') as conn:
@@ -43,7 +46,7 @@ def login():
             if user:
                 session['user_id'] = user[0]
                 session['role'] = user[3]
-                return redirect(url_for('dasboard'))
+                return redirect(url_for('dashboard'))
             else:
                 error = "Invalid credentials"
     return render_template('login.html', error=error)
@@ -70,6 +73,7 @@ def register_student():
 
 @app.route('/attendance', methods=['GET', 'POST'])
 def attendance():
+    request.form['student_class']
     if 'role' not in session or session['role'] != 'teacher':
         return redirect(url_for('login'))
     with sqlite3.connect('database.db') as conn:
